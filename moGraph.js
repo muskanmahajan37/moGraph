@@ -32,7 +32,7 @@ moGraph.prototype.getPos = function (node) {
   return pos;
 };
 
-moGraph.prototype.drawPath = function (leftPos, rightPos, key) {
+moGraph.prototype.drawNodePath = function (leftPos, rightPos, key) {
   var curveRadius = 12;
 
   if (leftPos.y === rightPos.y) {
@@ -54,29 +54,27 @@ moGraph.prototype.drawPath = function (leftPos, rightPos, key) {
   return '<path stroke-width="3" stroke="#939393" d="' + pathData + '" fill="none" />';
 };
 
+moGraph.prototype.createNodesPath = function (data, options){
+  // var lines = '';
+  // var line = this.drawNodePath(leftPos, rightPos, 'id-5-3');
+};
+
+moGraph.prototype.createNodes = function (data, options) {
+  var nodes = [];
+  for (var i = 0; i < data.length; i++) {
+      var rect = this.createNode(data[i], options);
+      nodes = nodes + rect;
+  }
+  return nodes;
+};
+
 moGraph.prototype.draw = function () {
   var data = this.options.data;
   var options = this.options;
-  var rects = '';
-  var lines = '';
+  var nodes = this.createNodes(data, options);
+  var lines = this.createNodesPath(data, options);
 
-  for (var i = 0; i < data.length; i++) {
-    var rect = this.createNode(data[i], options);
-    rects = rects + rect;
-  }
-  var leftPos =  {
-    x: 0,
-    y: 0
-  };
-  var rightPos = {
-    x: 120,
-    y: 120
-  };
-
-  var line = this.drawPath(leftPos, rightPos, 'id-5-3');
-  lines = lines + line;
-
-  var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + rects + lines + '</svg>';
+  var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + nodes + lines + '</svg>';
 
   var svgDom = document.getElementById('svg');
   svgDom.innerHTML = svg;
