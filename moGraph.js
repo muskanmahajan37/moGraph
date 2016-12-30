@@ -6,12 +6,16 @@ moGraph.prototype.createNode = function (node, options) {
 
   var pos = this.getPos(node);
 
-  var rect = '<rect style="fill: #222; stroke-width: 1px;" '
-      + 'rx="' + options.nodeWidth + 'px" '
-      + 'x="' + pos.x + '" y="' + pos.y + '" '
-      + 'width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
+  var posStr = ' x="' + pos.x + '" y="' + pos.y + '"';
 
-  return rect;
+  var rect = '<rect style="fill: #eee; stroke-width: 1px;" '
+      + 'rx="' + options.nodeWidth + 'px"'
+      + posStr
+      + ' width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
+
+  var text = '<g><text><tspan xml:space="preserve" dy="1em"' + posStr + '>' + node.title + '</tspan></text></g>';
+
+  return rect + text;
 };
 
 moGraph.prototype.getPos = function (node) {
@@ -28,7 +32,7 @@ moGraph.prototype.getPos = function (node) {
   return pos;
 };
 
-moGraph.prototype.drawLine = function (leftPos, rightPos, key) {
+moGraph.prototype.drawPath = function (leftPos, rightPos, key) {
   var curveRadius = 12;
 
   if (leftPos.y === rightPos.y) {
@@ -47,7 +51,7 @@ moGraph.prototype.drawLine = function (leftPos, rightPos, key) {
       + ' l 0 ' + v
       + ' c 0 ' + cv  + ' ' + curveRadius  + ' ' + cv  + ' ' + curveRadius  + ' ' + cv
       + ' l ' + w2 + ' 0';
-  return '<path stroke-width="3" stroke="#949393" d="' + pathData + '" fill="none" />';
+  return '<path stroke-width="3" stroke="#939393" d="' + pathData + '" fill="none" />';
 };
 
 moGraph.prototype.draw = function () {
@@ -69,7 +73,7 @@ moGraph.prototype.draw = function () {
     y: 120
   };
 
-  var line = this.drawLine(leftPos, rightPos, 'id-5-3');
+  var line = this.drawPath(leftPos, rightPos, 'id-5-3');
   lines = lines + line;
 
   var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + rects + lines + '</svg>';
