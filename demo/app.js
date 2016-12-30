@@ -1,10 +1,12 @@
 var data = [
   {
     "id": 1,
+    "level": 1,
     "title": "HTML"
   },
   {
     "id": 2,
+    "level": 2,
     "title": "CSS"
   }
 ];
@@ -18,5 +20,4 @@ var options = {
 };
 
 var mo = new moGraph('skill-tree', options);
-mo.createNode();
 mo.draw();
