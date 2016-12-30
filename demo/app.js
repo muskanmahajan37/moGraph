@@ -7,13 +7,13 @@ var data = [
   {
     "id": 2,
     "level": 2,
-     "deps": "1",
+     "deps": ["1"],
     "title": "CSS"
   },
   {
     "id": 3,
     "level": 2,
-    "deps": "1",
+    "deps": ["1"],
     "title": "JS"
   }
 ];

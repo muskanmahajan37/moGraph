@@ -9,12 +9,13 @@ moGraph.prototype.createNode = function (node, options) {
   var posStr = ' x="' + pos.x + '" y="' + pos.y + '"';
 
   var rect = '<rect style="fill: #eee; stroke-width: 1px;" '
-      + 'rx="' + options.nodeWidth + 'px"'
-      + posStr
-      + ' width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
+    + 'rx="' + options.nodeWidth + 'px"'
+    + posStr
+    + ' width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
 
   var text = '<g><text><tspan xml:space="preserve" dy="1em"' + posStr + '>' + node.title + '</tspan></text></g>';
 
+  node.pos = pos;
   return rect + text;
 };
 
@@ -36,7 +37,7 @@ moGraph.prototype.drawNodePath = function (leftPos, rightPos, key) {
   var curveRadius = 12;
 
   if (leftPos.y === rightPos.y) {
-    return '<line id="' + key + '" x1=' + leftPos.x + ' y1=' + leftPos.y + ' x2=' + rightPos.x + ' y2=' + rightPos.y + '/>';
+    return '<line stroke-width="3" stroke="#939393" id="' + key + '" x1=' + leftPos.x + ' y1=' + leftPos.y + ' x2=' + rightPos.x + ' y2=' + rightPos.y + ' />';
   }
   var verticalDirection = Math.sign(rightPos.y - leftPos.y); // 1 == curve down, -1 == curve up
   var midPointX = Math.round((leftPos.x + rightPos.x) / 2);
@@ -46,24 +47,38 @@ moGraph.prototype.drawNodePath = function (leftPos, rightPos, key) {
   var cv = verticalDirection * curveRadius;
 
   var pathData = 'M ' + leftPos.x + ' ' + leftPos.y
-      + ' l ' + w1 + ' 0'
-      + ' c ' + curveRadius + ' ' + 0  + ' ' + curveRadius  + ' ' + cv  + ' ' + curveRadius  + ' ' + cv
-      + ' l 0 ' + v
-      + ' c 0 ' + cv  + ' ' + curveRadius  + ' ' + cv  + ' ' + curveRadius  + ' ' + cv
-      + ' l ' + w2 + ' 0';
+    + ' l ' + w1 + ' 0'
+    + ' c ' + curveRadius + ' ' + 0 + ' ' + curveRadius + ' ' + cv + ' ' + curveRadius + ' ' + cv
+    + ' l 0 ' + v
+    + ' c 0 ' + cv + ' ' + curveRadius + ' ' + cv + ' ' + curveRadius + ' ' + cv
+    + ' l ' + w2 + ' 0';
   return '<path stroke-width="3" stroke="#939393" d="' + pathData + '" fill="none" />';
 };
 
-moGraph.prototype.createNodesPath = function (data, options){
-  // var lines = '';
-  // var line = this.drawNodePath(leftPos, rightPos, 'id-5-3');
+moGraph.prototype.createNodesPath = function (data, options) {
+  var lines = '';
+  for (var i = 0; i < data.length; i++) {
+    var currentNode = data[i];
+
+    if(currentNode.deps && currentNode.deps.length > 0){
+      for (var j = 0; j < currentNode.deps.length; j++) {
+        var depNodeId = currentNode.deps[j];
+        var depNode = data[depNodeId - 1];
+
+        var line = this.drawNodePath(currentNode.pos, depNode.pos, 'id-' + currentNode.id + '-' + depNode.id);
+        lines = lines + line;
+      }
+    }
+  }
+
+  return lines;
 };
 
 moGraph.prototype.createNodes = function (data, options) {
   var nodes = [];
   for (var i = 0; i < data.length; i++) {
-      var rect = this.createNode(data[i], options);
-      nodes = nodes + rect;
+    var rect = this.createNode(data[i], options);
+    nodes = nodes + rect;
   }
   return nodes;
 };
