@@ -1,27 +1,17 @@
 var moGraph = function (canvas_name, options) {
   this.options = options;
-
-  this.svg = "http://www.w3.org/2000/svg";
-  this.canvas = document.getElementById(canvas_name);
-
-  this.canvas.style.width = this.options.width + "px";
-  this.canvas.style.height = this.options.height + "px";
 };
 
 moGraph.prototype.createNode = function (node, options) {
-  var vertex = document.createElementNS(this.svg, "rect");
-  vertex.setAttribute("style", "fill: #222; stroke-width: 1px;");
-  vertex.setAttribute("rx", options.nodeWidth + 'px');
 
   var pos = this.getPos(node);
 
-  vertex.setAttribute("x", pos.x);
-  vertex.setAttribute("y", pos.y);
+  var rect = '<rect style="fill: #222; stroke-width: 1px;" '
+      + 'rx="' + options.nodeWidth + 'px" '
+      + 'x="' + pos.x + '" y="' + pos.y + '" '
+      + 'width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
 
-  vertex.setAttribute("width", options.nodeWidth + 'px');
-  vertex.setAttribute("height", options.nodeWidth + 'px');
-
-  this.canvas.appendChild(vertex);
+  return rect;
 };
 
 moGraph.prototype.getPos = function (node) {
@@ -51,7 +41,7 @@ moGraph.prototype.drawLine = function (leftPos, rightPos, key) {
   var v = rightPos.y - leftPos.y - (2 * curveRadius * verticalDirection); // Will be -ive if curve up
   var cv = verticalDirection * curveRadius;
 
-  let pathData = 'M ' + leftPos.x + ' ' + leftPos.y
+  var pathData = 'M ' + leftPos.x + ' ' + leftPos.y
       + ' l ' + w1 + ' 0'
       + ' c ' + curveRadius + ' ' + 0  + ' ' + curveRadius  + ' ' + cv  + ' ' + curveRadius  + ' ' + cv
       + ' l 0 ' + v
@@ -63,9 +53,12 @@ moGraph.prototype.drawLine = function (leftPos, rightPos, key) {
 moGraph.prototype.draw = function () {
   var data = this.options.data;
   var options = this.options;
+  var rects = '';
+  var lines = '';
 
   for (var i = 0; i < data.length; i++) {
-    this.createNode(data[i], options);
+    var rect = this.createNode(data[i], options);
+    rects = rects + rect;
   }
   var leftPos =  {
     x: 0,
@@ -75,6 +68,12 @@ moGraph.prototype.draw = function () {
     x: 120,
     y: 120
   };
-  let line = this.drawLine(leftPos, rightPos, 'id-5-3');
-  this.canvas.appendChild(line);
+
+  var line = this.drawLine(leftPos, rightPos, 'id-5-3');
+  lines = lines + line;
+
+  var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + rects + lines + '</svg>';
+
+  var svgDom = document.getElementById('svg');
+  svgDom.innerHTML = svg;
 };
