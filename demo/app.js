@@ -27,4 +27,6 @@ var options = {
 };
 
 var mo = new moGraph('skill-tree', options);
-mo.draw();
+var svg = mo.draw();
+var svgDom = document.getElementById('svg');
+svgDom.innerHTML = svg;
