@@ -1,5 +1,9 @@
 var moGraph = function (canvas_name, options) {
   this.options = options;
+  this.levelCount = [];
+
+  this.levelCount[1] = 0;
+  this.levelCount[2] = 0;
 };
 
 moGraph.prototype.createNode = function (node, options) {
@@ -25,10 +29,13 @@ moGraph.prototype.getPos = function (node) {
     y: 0
   };
   if (node.level === 2) {
-    return {
+    var pos = {
       x: 120,
-      y: 0
-    }
+      y: this.levelCount[2] * 120
+    };
+
+    this.levelCount[2]++;
+    return pos
   }
   return pos;
 };
