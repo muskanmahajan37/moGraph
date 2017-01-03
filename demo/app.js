@@ -15,6 +15,12 @@ var data = [
     "level": 2,
     "deps": ["1"],
     "title": "JS"
+  },
+  {
+    "id": 4,
+    "level": 3,
+    "deps": ["2"],
+    "title": "jQuery"
   }
 ];
 
