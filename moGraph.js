@@ -1,14 +1,9 @@
 var moGraph = function (canvas_name, options) {
   this.options = options;
-  this.levelCount = [];
-
-  this.levelCount[1] = 0;
-  this.levelCount[2] = 0;
-  this.levelCount[3] = 0;
+  this.level = this.countLevel(data);
 };
 
 moGraph.prototype.createNode = function (node, options) {
-
   var pos = this.getPos(node);
 
   var posStr = ' x="' + pos.x + '" y="' + pos.y + '"';
@@ -25,20 +20,23 @@ moGraph.prototype.createNode = function (node, options) {
 };
 
 moGraph.prototype.countLevel = function () {
-  var level = {};
+  var level = {
+    count: {}
+  };
   var maxLevelNumber = 1;
   for (var i = 0; i < data.length; i++) {
     var nodeLevel = data[i].level;
-    if(nodeLevel) {
-      if(level[nodeLevel] === undefined) {
+    if (nodeLevel) {
+      if (level[nodeLevel] === undefined) {
         level[nodeLevel] = 1;
       } else {
         level[nodeLevel]++;
       }
+      level.count[nodeLevel] = 0;
     }
   }
-  for(var key in level){
-    if(key > 1 && level[key] > level[key-1]){
+  for (var key in level) {
+    if (key > 1 && level[key] > level[key - 1]) {
       maxLevelNumber = level[key];
     }
   }
@@ -47,27 +45,22 @@ moGraph.prototype.countLevel = function () {
   return level;
 };
 
+
 moGraph.prototype.getPos = function (node) {
+  var levelInfo = this.level;
+  var maxLevel = this.level.max;
+
+  function currentLevelCount(level) {
+    return levelInfo[level];
+  }
+
   var pos = {
-    x: 0,
-    y: 75
+    x: (node.level - 1) * 150,
+    y: (maxLevel - currentLevelCount(node.level)) / 2 * 150 + this.level.count[node.level] * 150
   };
-  if (node.level === 2) {
-    pos = {
-      x: 150 * 1,
-      y: this.levelCount[2] * 150
-    };
 
-    this.levelCount[2]++;
-  }
-  if (node.level === 3) {
-    pos = {
-      x: 150 * 2 ,
-      y: this.levelCount[3] * 150
-    };
+  this.level.count[node.level]++;
 
-    this.levelCount[3]++;
-  }
   return pos;
 };
 
@@ -98,7 +91,7 @@ moGraph.prototype.createNodesPath = function (data, options) {
   for (var i = 0; i < data.length; i++) {
     var currentNode = data[i];
 
-    if(currentNode.deps && currentNode.deps.length > 0){
+    if (currentNode.deps && currentNode.deps.length > 0) {
       for (var j = 0; j < currentNode.deps.length; j++) {
         var depNodeId = currentNode.deps[j];
         var depNode = data[depNodeId - 1];
@@ -133,7 +126,6 @@ moGraph.prototype.createNodes = function (data, options) {
 moGraph.prototype.draw = function () {
   var data = this.options.data;
   var options = this.options;
-  this.level = this.countLevel(data);
 
   var nodes = this.createNodes(data, options);
   var lines = this.createNodesPath(data, options);
