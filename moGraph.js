@@ -72,7 +72,7 @@ moGraph.prototype.createNodesPath = function (data, options) {
         var depNodeId = currentNode.deps[j];
         var depNode = data[depNodeId - 1];
 
-        var line = this.drawNodePath(currentNode.pos, depNode.pos, 'id-' + currentNode.id + '-' + depNode.id);
+        var line = this.drawNodePath(depNode.pos, currentNode.pos, 'id-' + currentNode.id + '-' + depNode.id);
         lines = lines + line;
       }
     }
