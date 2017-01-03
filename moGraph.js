@@ -130,7 +130,7 @@ moGraph.prototype.draw = function () {
   var nodes = this.createNodes(data, options);
   var lines = this.createNodesPath(data, options);
 
-  var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + nodes + lines + '</svg>';
+  var svg = '<svg version="1.1" id="skill-tree" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="1920" height="1080" xml:space="preserve">' + lines + nodes + '</svg>';
 
   return svg;
 };
