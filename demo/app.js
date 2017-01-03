@@ -17,6 +17,12 @@ var data = [
     "title": "JS"
   },
   {
+    "id": 5,
+    "level": 2,
+    "deps": ["1"],
+    "title": "CSS 3"
+  },
+  {
     "id": 4,
     "level": 3,
     "deps": ["2"],
