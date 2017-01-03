@@ -24,6 +24,29 @@ moGraph.prototype.createNode = function (node, options) {
   return rect + text;
 };
 
+moGraph.prototype.countLevel = function () {
+  var level = {};
+  var maxLevelNumber = 1;
+  for (var i = 0; i < data.length; i++) {
+    var nodeLevel = data[i].level;
+    if(nodeLevel) {
+      if(level[nodeLevel] === undefined) {
+        level[nodeLevel] = 1;
+      } else {
+        level[nodeLevel]++;
+      }
+    }
+  }
+  for(var key in level){
+    if(key > 1 && level[key] > level[key-1]){
+      maxLevelNumber = level[key];
+    }
+  }
+
+  level.max = maxLevelNumber;
+  return level;
+};
+
 moGraph.prototype.getPos = function (node) {
   var pos = {
     x: 0,
@@ -110,6 +133,8 @@ moGraph.prototype.createNodes = function (data, options) {
 moGraph.prototype.draw = function () {
   var data = this.options.data;
   var options = this.options;
+  this.level = this.countLevel(data);
+
   var nodes = this.createNodes(data, options);
   var lines = this.createNodesPath(data, options);
 
