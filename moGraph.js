@@ -9,7 +9,7 @@ moGraph.prototype.createNode = function (node, options) {
   var posStr = ' x="' + pos.x + '" y="' + pos.y + '"';
 
   var rect = '<rect style="fill: #eee; stroke-width: 1px;" '
-    + 'rx="' + options.nodeWidth + 'px"'
+    + 'rx="' + options.nodeWidth * 0.618 * 0.618 + 'px"'
     + posStr
     + ' width="' + options.nodeWidth + 'px" height="' + options.nodeWidth + 'px"></rect>';
 
